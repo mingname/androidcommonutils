@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             { deniedList, doNotAskAgain ->
                 // 权限被拒绝
                 if (doNotAskAgain) {
+
                     PermissionManager.gotoPermissionSettings(this)
                 } else {
                     Toast.makeText(this, "权限拒绝: $deniedList", Toast.LENGTH_SHORT).show()
