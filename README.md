@@ -1,5 +1,8 @@
 安卓使用的公共类
 ```
+使用前引用：
+implementation 'com.github.mingname:androidcommonutils:v1.0.0'
+
 MqttManager  mqtt连接，订阅主题，发送接收消息
 PermissionManager   权限申请管理
  PermissionManager.requestPermissions(
