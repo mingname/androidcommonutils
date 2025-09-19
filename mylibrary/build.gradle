@@ -36,6 +36,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -51,4 +54,5 @@ dependencies {
     api 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
     api 'com.github.getActivity:XXPermissions:18.3'
     api "com.google.code.gson:gson:2.10.1"
+    api 'com.github.getActivity:ToastUtils:9.6'
 }
