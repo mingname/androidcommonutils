@@ -31,7 +31,7 @@ public class MqttManager {
     private final MqttAndroidClient mqttAndroidClient;
     private final MqttConnectOptions connectOptions;
 
-    private String serverUri = "tcp://broker.hivemq.com:1883"; // 可替换为你自己的服务器
+    private String serverUri = "tcp://broker.hivemq.co:1883"; // 可替换为你自己的服务器
     private final String clientId = "AndroidClient_" + System.currentTimeMillis();
     private final Context context;
 
