@@ -105,22 +105,18 @@ public class MqttManager {
         if(mqttAndroidClient.isConnected()){
             Log.d(TAG, "已经连接，无需重复连接");
         }
-        try {
-            mqttAndroidClient.connect(connectOptions, null, new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    Log.d(TAG, "连接成功");
-                }
+        mqttAndroidClient.connect(connectOptions, null, new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken asyncActionToken) {
+                Log.d(TAG, "连接成功");
+            }
 
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Log.e(TAG, "连接失败", exception);
-                    reconnectWithDelay();
-                }
-            });
-        } catch (MqttException e) {
-            Log.e(TAG, "连接异常", e);
-        }
+            @Override
+            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                Log.e(TAG, "连接失败", exception);
+                reconnectWithDelay();
+            }
+        });
     }
 
     private void reconnectWithDelay() {
@@ -128,21 +124,17 @@ public class MqttManager {
     }
 
     public void subscribe(String topic) {
-        try {
-            mqttAndroidClient.subscribe(topic, 1, null, new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    Log.d(TAG, "订阅成功: " + topic);
-                }
+        mqttAndroidClient.subscribe(topic, 1, null, new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken asyncActionToken) {
+                Log.d(TAG, "订阅成功: " + topic);
+            }
 
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Log.e(TAG, "订阅失败: " + topic, exception);
-                }
-            });
-        } catch (MqttException e) {
-            Log.e(TAG, "订阅异常", e);
-        }
+            @Override
+            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                Log.e(TAG, "订阅失败: " + topic, exception);
+            }
+        });
     }
 
     public void publish(String topic, String message) {
