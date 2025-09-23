@@ -8,17 +8,17 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.nio.charset.StandardCharsets;
 
-import info.mqtt.android.service.Ack;
-import info.mqtt.android.service.MqttAndroidClient;
 
 /**
  * @author xqm
@@ -41,7 +41,7 @@ public class MqttManager {
 
     public MqttManager(Context context,String serverUriAdd,String clientIdAdd,String userName,String pwd) {
         this.context = context.getApplicationContext();
-        mqttAndroidClient = new MqttAndroidClient(context, serverUriAdd, clientIdAdd, Ack.AUTO_ACK);
+        mqttAndroidClient = new MqttAndroidClient(context, serverUriAdd, clientIdAdd);
         connectOptions = new MqttConnectOptions();
         connectOptions.setUserName(userName);
         connectOptions.setPassword(pwd.toCharArray());
@@ -103,18 +103,22 @@ public class MqttManager {
         if(mqttAndroidClient.isConnected()){
             Log.d(TAG, "已经连接，无需重复连接");
         }
-        mqttAndroidClient.connect(connectOptions, null, new IMqttActionListener() {
-            @Override
-            public void onSuccess(IMqttToken asyncActionToken) {
-                Log.d(TAG, "连接成功");
-            }
+        try {
+            mqttAndroidClient.connect(connectOptions, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    Log.d(TAG, "连接成功");
+                }
 
-            @Override
-            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                Log.e(TAG, "连接失败", exception);
-                reconnectWithDelay();
-            }
-        });
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Log.e(TAG, "连接失败", exception);
+                    reconnectWithDelay();
+                }
+            });
+        } catch (MqttException e) {
+            Log.e(TAG, "连接异常", e);
+        }
     }
 
     private void reconnectWithDelay() {
@@ -122,29 +126,41 @@ public class MqttManager {
     }
 
     public void subscribe(String topic) {
-        mqttAndroidClient.subscribe(topic, 1, null, new IMqttActionListener() {
-            @Override
-            public void onSuccess(IMqttToken asyncActionToken) {
-                Log.d(TAG, "订阅成功: " + topic);
-            }
+        try {
+            mqttAndroidClient.subscribe(topic, 1, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    Log.d(TAG, "订阅成功: " + topic);
+                }
 
-            @Override
-            public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                Log.e(TAG, "订阅失败: " + topic, exception);
-            }
-        });
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Log.e(TAG, "订阅失败: " + topic, exception);
+                }
+            });
+        } catch (MqttException e) {
+            Log.e(TAG, "订阅异常", e);
+        }
     }
 
     public void publish(String topic, String message) {
-        MqttMessage mqttMessage = new MqttMessage();
-        mqttMessage.setPayload(message.getBytes(StandardCharsets.UTF_8));
-        mqttAndroidClient.publish(topic, mqttMessage);
-        Log.d(TAG, "发送消息: topic=" + topic + ", message=" + message);
+        try {
+            MqttMessage mqttMessage = new MqttMessage();
+            mqttMessage.setPayload(message.getBytes(StandardCharsets.UTF_8));
+            mqttAndroidClient.publish(topic, mqttMessage);
+            Log.d(TAG, "发送消息: topic=" + topic + ", message=" + message);
+        } catch (MqttException e) {
+            Log.e(TAG, "发送失败", e);
+        }
     }
 
     public void disconnect() {
-        mqttAndroidClient.disconnect();
-        Log.d(TAG, "断开连接");
+        try {
+            mqttAndroidClient.disconnect();
+            Log.d(TAG, "断开连接");
+        } catch (MqttException e) {
+            Log.e(TAG, "断开异常", e);
+        }
     }
 
     public void setOnMessageReceiveListener(OnMessageReceiveListener listener) {
