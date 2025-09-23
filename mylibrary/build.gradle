@@ -50,8 +50,9 @@ dependencies {
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
     implementation 'androidx.fragment:fragment:1.6.1'
-    api 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
-    api 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
+//    api 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
+//    api 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
+    api 'com.github.hannesa2:paho.mqtt.android:3.3.5'
     api 'com.github.getActivity:XXPermissions:18.3'
     api "com.google.code.gson:gson:2.10.1"
     api 'com.github.getActivity:ToastUtils:9.6'
