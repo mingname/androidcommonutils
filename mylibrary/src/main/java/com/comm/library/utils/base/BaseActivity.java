@@ -4,6 +4,7 @@ package com.comm.library.utils.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +40,14 @@ public abstract class BaseActivity<VB extends ViewBinding> extends AppCompatActi
         initView();
         initData();
         initListener();
+
+        // 让内容延伸到状态栏区域
+//        getWindow().getDecorView().setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//        );
+//
+//        // 状态栏设置为透明
+//        getWindow().setStatusBarColor(Color.TRANSPARENT);
     }
 
     // 子类实现初始化View
