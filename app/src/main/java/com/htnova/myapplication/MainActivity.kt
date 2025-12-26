@@ -1,5 +1,6 @@
 package com.htnova.myapplication
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -9,6 +10,7 @@ import android.os.Handler
 import android.widget.Toast
 import com.comm.library.utils.PermissionManager
 import com.hjq.permissions.Permission
+import com.htnova.myapplication.service.AutoClickService
 
 class MainActivity : AppCompatActivity() {
     private var autoClickService: AutoClickService? = null
@@ -19,12 +21,17 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btnClick).setOnClickListener {
             packageManager.getLaunchIntentForPackage("com.tencent.mm")?.let {
+                it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(it)
             }
-            autoClickService?.click(500f, 1000f) // 点击坐标 (500,1000)
+            clickAuto()// 点击坐标 (500,1000)
             Handler().postDelayed({
-                autoClickService?.click(500f, 1000f)
-            }, 2000)
+                clickAuto()
+            }, 5000)
+
+
+
+
         }
 
         findViewById<Button>(R.id.btnSwipe).setOnClickListener {
@@ -57,6 +64,14 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    fun clickAuto(){
+        val intent = Intent(this, AutoClickService::class.java)
+        intent.putExtra("action", "click")
+        intent.putExtra("x", 50f)
+        intent.putExtra("y", 100f)
+        startService(intent)
+
+    }
 
 
 }

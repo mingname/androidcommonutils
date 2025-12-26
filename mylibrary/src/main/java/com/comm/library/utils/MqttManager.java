@@ -143,6 +143,29 @@ public class MqttManager {
         }
     }
 
+    public void unsubscribe(final String topic) {
+        try {
+            if (!mqttAndroidClient.isConnected()) {
+                Log.w(TAG, "取消订阅失败，MQTT 未连接");
+                return;
+            }
+
+            mqttAndroidClient.unsubscribe(topic, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    Log.d(TAG, "取消订阅成功: " + topic);
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Log.e(TAG, "取消订阅失败: " + topic, exception);
+                }
+            });
+        } catch (MqttException e) {
+            Log.e(TAG, "取消订阅异常", e);
+        }
+    }
+
     public void publish(String topic, String message) {
         try {
             MqttMessage mqttMessage = new MqttMessage();

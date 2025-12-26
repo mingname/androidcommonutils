@@ -1,9 +1,12 @@
-package com.htnova.myapplication
+package com.htnova.myapplication.service
+
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.GestureDescription
+import android.content.Intent
 import android.graphics.Path
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+
 /**
  * @author xqm
  * @date 2025/9/17 14:43
@@ -44,4 +47,17 @@ class AutoClickService : AccessibilityService() {
         val gesture = GestureDescription.Builder().addStroke(stroke).build()
         dispatchGesture(gesture, null, null)
     }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        intent?.let {
+            val action = it.getStringExtra("action")
+            if (action == "click") {
+                val x = it.getFloatExtra("x", 0f)
+                val y = it.getFloatExtra("y", 0f)
+                click(x, y)
+            }
+        }
+        return START_STICKY
+    }
+
 }
