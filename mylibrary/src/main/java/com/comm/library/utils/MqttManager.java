@@ -219,6 +219,9 @@ public class MqttManager {
         return messageLiveData;
     }
 
+    public LiveData<Boolean> getOnReconnectLiveData() {
+        return onReconnectLiveData;
+    }
     // 消息事件类，包含主题和内容
     public static class MqttMessageEvent {
         private String topic;
