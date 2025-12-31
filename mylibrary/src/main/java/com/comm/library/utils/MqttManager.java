@@ -89,7 +89,7 @@ public class MqttManager {
             @Override
             public void connectionLost(Throwable cause) {
                 Log.e(TAG, "连接丢失，准备重连", cause);
-                reconnectWithDelay();
+//                reconnectWithDelay();
             }
 
             @Override
@@ -125,7 +125,7 @@ public class MqttManager {
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Log.e(TAG, "连接失败", exception);
-                    reconnectWithDelay();
+//                    reconnectWithDelay();
                 }
             });
         } catch (MqttException e) {
