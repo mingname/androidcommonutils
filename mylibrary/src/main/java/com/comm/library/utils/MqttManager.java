@@ -48,7 +48,7 @@ public class MqttManager {
         connectOptions.setUserName(userName);
         connectOptions.setPassword(pwd.toCharArray());
         connectOptions.setCleanSession(true);
-        connectOptions.setAutomaticReconnect(false);
+        connectOptions.setAutomaticReconnect(true);
         connectOptions.setKeepAliveInterval(30);
 
         initCallback();
