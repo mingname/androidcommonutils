@@ -13,6 +13,7 @@ import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -38,6 +39,7 @@ public class MqttManager {
     private OnMessageReceiveListener onMessageReceiveListener;
 
     private MutableLiveData<MqttMessageEvent> messageLiveData = new MutableLiveData<>();
+    private MutableLiveData<Boolean> onReconnectLiveData = new MutableLiveData<>();
 
     public MqttManager(Context context,String serverUriAdd,String clientIdAdd,String userName,String pwd) {
         this.context = context.getApplicationContext();
@@ -73,7 +75,17 @@ public class MqttManager {
     }
 
     private void initCallback() {
-        mqttAndroidClient.setCallback(new MqttCallback() {
+        mqttAndroidClient.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
+                if (reconnect) {
+                    Log.d(TAG, "MQTT 重连成功");
+                    if (onReconnectLiveData != null) {
+                        onReconnectLiveData.postValue(true);
+                    }
+                }
+            }
+
             @Override
             public void connectionLost(Throwable cause) {
                 Log.e(TAG, "连接丢失，准备重连", cause);
